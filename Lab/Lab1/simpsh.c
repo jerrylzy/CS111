@@ -3,7 +3,7 @@
 //  Lab-1A
 //
 //  Created by Jerry Liu on 1/20/17.
-//  Copyright \251 2017 Jerry Liu. All rights reserved.
+//  Copyright © 2017 Jerry Liu. All rights reserved.
 //
 
 #include <errno.h>
