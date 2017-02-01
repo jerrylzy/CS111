@@ -140,10 +140,14 @@ int main(int argc, char *argv[]) {
                 print_verbose(argc, 0, argv);
                 close_file_table(files);
                 int wstatus;
+                Prog_t *prog = NULL;
+                pid_t cpid;
                 while (cmds->cmd_idx) {
+                    if ((cpid = waitpid(-1, &wstatus, 0)) < 0)
+                        report_error("*** Error: waitpid() fails.\n");
                     for (int i = 0; i < cmds->cmd_idx; i++) {
-                        Prog_t *prog = cmds->progs[i];
-                        if (waitpid(prog->pid, &wstatus, WNOHANG) != prog->pid)
+                        prog = cmds->progs[i];
+                        if (prog->pid != cpid)
                             continue;
                         int status = WEXITSTATUS(wstatus);
                         exit_status = MAX(exit_status, status);
