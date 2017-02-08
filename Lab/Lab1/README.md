@@ -1,10 +1,11 @@
-# Lab 1B: Simpleton Shell
+# Lab 1: Simpleton Shell
 ## File description
 * `simpsh.c`: Source code of the main routine.
 * `command.*`: Source code to support operations on commands.
 * `file.*`: Source code to support operations on file descriptors.
 * `signal.*`: Source code to support signal / sigaction calls.
 * `utility.*`: Source code of helper functions and header of definitions.
+* `profile.*`: Source code to support performance profiling.
 * `Makefile`: Makefile, supports clean, check, dist options.
 * `README`: The readme markdown file that provides extra information.
 * `test.sh`: Shell script for testing basic functionality.

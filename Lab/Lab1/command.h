@@ -33,7 +33,8 @@ typedef struct {
 extern Args_t *cmd_args;
 
 Command_t *init_cmds_table();
-char **store_command (int argc, int required_argc, char *argv[]);
+static char **store_command (int argc, int required_argc, char *argv[]);
+char **print_verbose(int argc, int required_argc, char *argv[]);
 void add_command(Command_t **pcmds, Prog_t *prog);
 void swap(Prog_t **lhs, Prog_t **rhs);
 

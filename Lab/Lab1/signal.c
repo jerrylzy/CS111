@@ -20,7 +20,7 @@ void process_verbose(int option, int argc, char *argv[]) {
     print_verbose(argc, num_of_args, argv);
 }
 
-void signal_handler (int signum) {
+static void signal_handler (int signum) {
     fprintf(stderr, "Caught signal number: %d. Now exit ...\n", signum);
     exit(signum);
 }
@@ -43,7 +43,7 @@ void signal_process(int option) {
                 action.sa_handler = SIG_IGN;
             else
                 action.sa_handler = SIG_DFL;
-            if (sigaction(atoi(optarg), &action, NULL) == -1) {
+            if (sigaction(atoi(optarg), &action, NULL) < 0) {
                 fprintf(stderr, "*** Error: --%s error, ", long_options[opt_idx].name);
                 report_error("sigaction() failed.\n");
             }

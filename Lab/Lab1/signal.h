@@ -17,7 +17,7 @@
 #define PAUSE       'a'
 
 void process_verbose(int option, int argc, char *argv[]);
-void signal_handler (int signum);
+static void signal_handler (int signum);
 void signal_process(int option);
 
 #endif /* signal_h */

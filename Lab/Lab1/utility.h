@@ -41,7 +41,7 @@
 //  Misc
 #define CLOSE       '3'
 #define VERBOSE     '4'
-//#define PROFILE     '5'
+#define PROFILE     '5'
 
 #define MAX(a, b)   ((a) < (b) ? (b) : (a))
 
@@ -52,9 +52,8 @@ extern struct option long_options[];
 void report_error(const char* msg);
 void cleanup(File_t *files, Command_t *cmds, Args_t *cmd_args);
 int valid_integer(const char *command, const char *argv);
+void msgcat(char* buf, const char *option, const char *command, bool is_verbose);
 void print_message(const char *option, const char *command, bool is_verbose);
-char **print_verbose(int argc, int required_argc, char *argv[]);
 void print_exit_status(int status, const char *command);
-
 
 #endif /* utility_h */

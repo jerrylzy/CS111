@@ -2,7 +2,7 @@
 
 chmod 755 simpsh
 
-TEMP_DIR="lab1b_test"
+TEMP_DIR="lab1_test"
 rm -rf $TEMP_DIR
 mkdir $TEMP_DIR
 cp simpsh ./$TEMP_DIR/

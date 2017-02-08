@@ -42,30 +42,27 @@ int valid_integer(const char *command, const char *argv) {
     return fd;
 }
 
-void print_message(const char *option, const char *command, bool is_verbose) {
-    //  buffer size 1000: assumption that passes test cases, not robust
-    char buffer[BUF_SIZE];
-    strcpy(buffer, option);
-    strcat(buffer, command);
+void msgcat(char* buf, const char *option, const char *command, bool is_verbose) {
+    strcpy(buf, option);
+    strcat(buf, command);
     if (is_verbose) {
         for (char **argv = cmd_args->cmd_argv, **end = argv + cmd_args->num_args;
              *argv != NULL && argv < end; argv++) {
-            strcat(buffer, " ");
-            strcat(buffer, *argv);
+            strcat(buf, " ");
+            strcat(buf, *argv);
         }
     }
-    strcat(buffer, "\n");
-    
-    //  Output the command line option
-    if (write(STDOUT_FILENO, buffer, strlen(buffer)) == -1)
-        report_error("*** Error: write error, cannot print command message.\n");
 }
 
-char **print_verbose(int argc, int required_argc, char *argv[]) {
-    char **ret = store_command(argc, required_argc, argv);
-    if (verbose_flag)  //  Print command line options
-        print_message("--", long_options[opt_idx].name, true);
-    return ret;
+void print_message(const char *option, const char *command, bool is_verbose) {
+    //  buffer size 1000: assumption that passes test cases, not robust
+    char buffer[BUF_SIZE];
+    msgcat(buffer, option, command, is_verbose);
+    strcat(buffer, "\n");
+
+    //  Output the command line option
+    if (write(STDOUT_FILENO, buffer, strlen(buffer)) < 0)
+        report_error("*** Error: write error, cannot print command message.\n");
 }
 
 void print_exit_status(int status, const char *command) {

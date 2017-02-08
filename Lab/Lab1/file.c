@@ -29,7 +29,7 @@ void close_file_table(File_t *files) {
     for (int i = 0; i < files->file_idx; i++) {
         if (files->fd_arr[i] == -1) {
             continue;
-        } else if (close(files->fd_arr[i]) == -1) {
+        } else if (close(files->fd_arr[i]) < 0) {
             report_error("*** Error: File descriptor cannot be closed.\n");
         } else {
             files->fd_arr[i] = -1;
@@ -55,9 +55,9 @@ void add_file_descriptor(File_t **pfiles, int fd) {
 
 void redirect_io(File_t *files, int pos_oldfd, int newfd) {
     int oldfd = files->fd_arr[pos_oldfd];
-    if (dup2(oldfd, newfd) == -1)
+    if (dup2(oldfd, newfd) < 0)
         report_error("*** Error: redirecting output.\n");
-    if (close(oldfd) == -1) {
+    if (close(oldfd) < 0) {
         report_error("*** Error: closing file descriptors.\n");
     } else {
         files->fd_arr[pos_oldfd] = -1;

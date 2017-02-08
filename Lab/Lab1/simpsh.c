@@ -19,6 +19,7 @@
 
 #include "command.h"
 #include "file.h"
+#include "profile.h"
 #include "signal.h"
 #include "utility.h"
 
@@ -50,7 +51,7 @@ struct option long_options[] = {
     //  Misc
     {"close",       required_argument,  NULL,   CLOSE},
     {"verbose",     no_argument,        NULL,   VERBOSE},
-    //{"profile",     no_argument,        NULL,   PROFILE},  //  Lab 1C
+    {"profile",     no_argument,        NULL,   PROFILE},
     {"abort",       no_argument,        NULL,   ABORT},
     {"catch",       required_argument,  NULL,   CATCH},
     {"ignore",      required_argument,  NULL,   IGNORE},
@@ -69,11 +70,16 @@ int main(int argc, char *argv[]) {
     int pipefd[2];
     int fd_args[3]; // in, out, err
     char **cmd_argv = NULL;
+    bool profile_flag = false;
+    char buf[BUF_SIZE];
+    CPUTime_t ctime, ctime_start, ctime_end;
     File_t *files = init_files_table();
     Command_t *cmds = init_cmds_table();
-    
+
+    get_self_time(&ctime);
     int ret;
     while ((ret = getopt_long(argc, argv, "", long_options, &opt_idx)) != -1) {
+        get_self_time(&ctime_start);
         switch (ret) {
                 //  File open-time flags
             case APPEND:    case CLOEXEC:   case CREAT:     case DIRECTORY:
@@ -86,14 +92,14 @@ int main(int argc, char *argv[]) {
                 //  File-opening options
             case RDONLY: case WRONLY: case RDWR:
                 print_verbose(argc, 1, argv);
-                if ((fd = open(optarg, ret | file_flag, 0666)) == -1)
+                if ((fd = open(optarg, ret | file_flag, 0666)) < 0)
                     report_error("*** Error: opening file.\n");
                 add_file_descriptor(&files, fd);
                 file_flag = 0;
                 break;
             case PIPE:
                 print_verbose(argc, 0, argv);
-                if (pipe(pipefd) == -1)
+                if (pipe(pipefd) < 0)
                     report_error("*** Error: creating a pipe.\n");
                 add_file_descriptor(&files, pipefd[0]);  //  read end
                 add_file_descriptor(&files, pipefd[1]);  //  write end
@@ -121,11 +127,11 @@ int main(int argc, char *argv[]) {
                     _exit(EXIT_FAILURE);  //  child process, use _exit instead
                 } else { //  parent process
                     //  store program information
-                    char **args = cmd_args->cmd_argv + 3;
-                    int arglen = cmd_args->num_args - 3;
                     Prog_t *prog = malloc(sizeof(Prog_t));
                     if (prog == NULL)
                         report_error("*** Error: cannot allocate memory for Prog_t.\n");
+                    char **args = cmd_args->cmd_argv + 3;
+                    int arglen = cmd_args->num_args - 3;
                     strcpy(prog->cmds, args[0]);
                     for (int i = 1; i < arglen; i++) {
                         strcat(prog->cmds, " ");
@@ -159,18 +165,22 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 break;
-                
+
                 //  Misc
             case CLOSE:
                 print_verbose(argc, 1, argv);
                 check_fd_args(files, "close", optarg);
-                if (close(files->fd_arr[atoi(optarg)]) == -1) {
+                if (close(files->fd_arr[atoi(optarg)]) < 0) {
                     report_error("*** Error: closing file descriptors.\n");
                 } else {
                     files->fd_arr[atoi(optarg)] = -1; // indicate fd's already closed
                 }
                 break;
-            case VERBOSE:   verbose_flag = true;   break;
+            case VERBOSE:   verbose_flag = true;    break;
+            case PROFILE:
+                print_verbose(argc, 0, argv);
+                profile_flag = true;
+                break;
             case ABORT: case CATCH: case IGNORE: case DEFAULT: case PAUSE:
                 process_verbose(ret, argc, argv);
                 signal_process(ret);
@@ -179,7 +189,24 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, "*** Error: unrecognized option: --%s\n", long_options[opt_idx].name);
                 break;
         }
+        if (profile_flag) {
+            get_time_diff(&ctime_end, &ctime_start);
+            msgcat(buf, "--", long_options[opt_idx].name, true);
+            fprintf(stdout, "'%s' execution time: user time, kernel time, %ld.%ds, %ld.%ds\n",
+                    buf, ctime_end.utime.tv_sec, ctime_end.utime.tv_usec,
+                    ctime_end.stime.tv_sec, ctime_end.stime.tv_usec);
+        }
     }
     cleanup(files, cmds, cmd_args);
+    if (profile_flag) {
+        get_child_time(&ctime_end);
+        fprintf(stdout, "Time for child processes: user time, kernel time, %ld.%ds, %ld.%ds\n",
+                ctime_end.utime.tv_sec, ctime_end.utime.tv_usec,
+                ctime_end.stime.tv_sec, ctime_end.stime.tv_usec);
+        get_time_diff(&ctime_end, &ctime);
+        fprintf(stdout, "Time for shell: user time, kernel time, %ld.%ds, %ld.%ds\n",
+                ctime_end.utime.tv_sec, ctime_end.utime.tv_usec,
+                ctime_end.stime.tv_sec, ctime_end.stime.tv_usec);
+    }
     exit(wait_flag ? exit_status : EXIT_SUCCESS);
 }

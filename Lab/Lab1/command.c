@@ -26,7 +26,7 @@ Command_t *init_cmds_table() {
     return cmds;
 }
 
-char **store_command (int argc, int required_argc, char *argv[]) {
+static char **store_command (int argc, int required_argc, char *argv[]) {
     int index = optind;
     for ( ; index < argc; index++) {
         if ( ! strncmp(argv[index], "--", 2))
@@ -56,6 +56,13 @@ char **store_command (int argc, int required_argc, char *argv[]) {
     //  Last element is always NULL, easier for child processes to parse
     cmd_argv[args_length] = NULL;
     return cmd_argv;
+}
+
+char **print_verbose(int argc, int required_argc, char *argv[]) {
+    char **ret = store_command(argc, required_argc, argv);
+    if (verbose_flag)  //  Print command line options
+        print_message("--", long_options[opt_idx].name, true);
+    return ret;
 }
 
 void add_command(Command_t **pcmds, Prog_t *prog) {
