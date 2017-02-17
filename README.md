@@ -17,7 +17,7 @@ Lab 4 |
 ## Lab Scores
 Lab # | Lab Score
 ----- | ---------
-0 | 
+0 | 100
 1A |
 1B |
 1C |
