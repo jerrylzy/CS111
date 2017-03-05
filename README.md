@@ -2,7 +2,7 @@
 
 [Course Website](http://web.cs.ucla.edu/classes/winter17/cs111/index.html)
 
-Last updated: 2/28/2017
+Last updated: 3/4/2017
 
 ## Lab Implementation
 Lab Specification | Lab Implementation
@@ -19,9 +19,9 @@ Lab 4 |
 Lab # | Lab Score
 ----- | ---------
 0 | 100
-1A |
-1B |
-1C |
+1A | 100
+1B | 100
+1C | 100
 2A |
 2B |
 3A |
