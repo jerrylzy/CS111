@@ -13,7 +13,7 @@ Lab Specification | Lab Implementation
 [Lab 2B: Lock Granularity and Performance](http://web.cs.ucla.edu/classes/winter17/cs111/labs/CS111newProject2B.html) | [Lab 2B](https://github.com/jerrylzy/CS111/tree/master/Lab/Lab2/Lab2B) 
 [Lab 3A: File System Dump](http://web.cs.ucla.edu/classes/winter17/cs111/assign/cs111_project3A.html) | [Lab 3A](https://github.com/jerrylzy/CS111/tree/master/Lab/Lab3/Lab3A)
 [Lab 3B: File System Analysis](http://web.cs.ucla.edu/classes/winter17/cs111/assign/cs111_project3B.html) | [Lab 3B (Python)](https://github.com/jerrylzy/CS111/tree/master/Lab/Lab3/Lab3B)
-[Lab 4: Embedded Systems](http://web.cs.ucla.edu/classes/winter17/cs111/labs/Project4.html) | 
+[Lab 4: Embedded Systems](http://web.cs.ucla.edu/classes/winter17/cs111/labs/Project4.html) | [Lab 4](https://github.com/jerrylzy/CS111/tree/master/Lab/Lab4)
 
 ## Lab Scores
 Lab # | Lab Score
