@@ -26,5 +26,5 @@ Lab # | Lab Score
 2B | 100
 3A | 100
 3B | 100
-4  |
+4  | 108 (100% for both normal part and extra credit part)
 
